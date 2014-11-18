@@ -1,0 +1,73 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[dutch]{babel}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{wallpaper}
+\usepackage{listings}
+\usepackage{amsmath}
+
+\usepackage{xcolor, colortbl}
+\definecolor{ugentblue}{HTML}{164A7C}
+\definecolor{gray}{HTML}{AAAAAA}
+
+% Tables
+\def\arraystretch{1.35}
+\renewcommand{\tabularxcolumn}[1]{>{\small}m{#1}}
+\newcommand{\hcell}[1]{
+	\cellcolor{ugentblue}\color{white}\textbf{#1}
+}
+
+\makeatletter
+\renewcommand\thesubsection{\@arabic\c@section.\@arabic\c@subsection}
+\makeatother{}
+
+\usepackage[hypertexnames=false]{hyperref}
+\usepackage[numbered, depth=3]{bookmark}
+
+\renewcommand{\headrulewidth}{0pt}
+\pagestyle{fancy}
+\fancyhf{}
+
+\interfootnotelinepenalty=0
+
+\begin{document}
+	\begin{titlepage}
+		%% Footer
+		\thispagestyle{fancy}
+		\fancyhf{}
+		
+		%% Page
+		\hfill
+		\begin{minipage}[t][0.9\textheight]{0.8\textwidth}
+			\noindent
+			\includegraphics[width=55px]{ugent-blue.png} \\[-1em]
+			\color{ugentblue}
+			\makebox[0pt][l]{\rule{1.3\textwidth}{1pt}}
+			\par
+			\noindent
+			\textbf{\textsf{Formele Logica}} \textcolor{gray}{\textsf{Academiejaar 2014-2015}}
+			\vfill
+				\noindent
+			{\huge \textsf{Project Alloy}}
+			\vskip\baselineskip
+			\noindent
+			\textsf{\textbf{Florian Dejonckheere}}
+		\end{minipage}
+	\end{titlepage}
+
+	%%% PAGE STYLE %%%
+	\nopagecolor
+	\renewcommand{\footrulewidth}{0.4pt}
+	\headheight 45pt
+	\ULCornerWallPaper{1}{header.png}
+	\fancyfoot[C]{\thepage}
+
+	%%% DOCUMENT %%%
+	\section{Ramsey-getallen}
+	\section{Cyclische toren van Hanoi}
+
+\end{document}
