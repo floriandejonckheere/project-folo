@@ -24,14 +24,23 @@
  *
  * */
 
-sig Node{ }
+sig Colour{}
 
-sig State{
+sig Node{colour: one Colour }
+
+one sig Graph{
 	nodes : Node,
-	edges: Node->Node
+	edges: Node one-> one Node
 }{
 	//no self-referencing
+/*	
 	all node: Node,state: State{
-		no state.edges.node = node
+		(state.edges != node->node)
 	}
+*/
+	//edges in nodes
+	Node in nodes
 }
+
+
+run {} for 1 Graph, 3 Colour,  5 Node

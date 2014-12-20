@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view>
+
+<projection> <type name="Graph"/> </projection>
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Graph"/>
+   <type name="Int"/>
+   <type name="String"/>
+   <type name="univ"/>
+   <type name="seq/Int"/>
+   <set name="nodes" type="Node"/>
+</node>
+
+<node color="Blue">
+   <type name="Colour"/>
+</node>
+
+<node shape="Ellipse">
+   <type name="Node"/>
+</node>
+
+</view>
+
+</alloy>
