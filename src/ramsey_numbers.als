@@ -26,30 +26,50 @@
 
 sig Colour{}
 
-sig Node{colour: one Colour }
+sig Node{}
 
-one sig Graph{
-	nodes : set Node,
-	edges: Node -> Node
+sig Edge{
+	connection: Node ->Node,
+	colour:  one Colour
 }{
 	//no self-referencing
-	all node:Node |  (node->node not in edges)
-	//all node->node relationships need to be nodes from the set 'nodes'
-	all node: Node | (edges.node in nodes) && (~edges.node in nodes)
-
-	//all nodes in graph
-	all node: Node | node in nodes
-	//all nodes need to be in a 'edge' relationship
-	//TODO:not sure of this one
-   //all node: Node | some node': Node | node->node' in edges
-
-   //edges relationship is symmetrical
-   edges = ~edges
-
-   //edge from a node to every other node
-   all node, node' : Node | node != node' => node' in edges.node
+	all node:Node | (node->node not in connection)
 
 }
 
+//make sure that 'colouring' is the same as Edge->colour
+fact {
+	colour = ~(Graph.colouring)
+}
 
-run {} for 1 Graph, exactly 3 Colour,  exactly 4 Node
+//specify the colour conditions
+fact {
+	//there are X edges in the same colour and Y in a different. X+Y=#Edge. X and Y are even.
+	some col:Colour | #((~(Graph.colouring)).col) = 4
+	some col:Colour | #((~(Graph.colouring)).col) = 2
+}
+
+
+one sig Graph{
+	nodes : set Node,
+//	edges: Node -> Node
+    edges: set Edge,
+	colouring: Colour one -> some Edge
+}{
+	//all nodes in graph
+	all node: Node | node in nodes
+	//all edges in graph
+	all edge:Edge | edge in edges
+
+   //edges relationship is symmetrical
+	all edge: Edge | some edge':Edge | edge.connection = ~(edge'.connection)
+	
+	//every edge only connects 2 points
+	all edge: Edge | one edge.connection
+
+   //complete graph
+   all node, node' : Node | some edge:Edge | node != node' => node->node' in edge.connection
+
+}
+
+run {} for 1 Graph, exactly 2 Colour,  exactly 3 Node,  exactly 6 Edge
