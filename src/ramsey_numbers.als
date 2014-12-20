@@ -41,7 +41,13 @@ one sig Graph{
 	all node: Node | node in nodes
 	//all nodes need to be in a 'edge' relationship
 	//TODO:not sure of this one
-	all node: Node | some node': Node | node->node' in edges
+   //all node: Node | some node': Node | node->node' in edges
+
+   //edges relationship is symmetrical
+   edges = ~edges
+
+   //edge from a node to every other node
+   all node, node' : Node | node != node' => node' in edges.node
 
 }
 
