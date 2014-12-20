@@ -29,18 +29,21 @@ sig Colour{}
 sig Node{colour: one Colour }
 
 one sig Graph{
-	nodes : Node,
-	edges: Node one-> one Node
+	nodes : set Node,
+	edges: Node -> Node
 }{
 	//no self-referencing
-/*	
-	all node: Node,state: State{
-		(state.edges != node->node)
-	}
-*/
-	//edges in nodes
-	Node in nodes
+	all node:Node |  (node->node not in edges)
+	//all node->node relationships need to be nodes from the set 'nodes'
+	all node: Node | (edges.node in nodes) && (~edges.node in nodes)
+
+	//all nodes in graph
+	all node: Node | node in nodes
+	//all nodes need to be in a 'edge' relationship
+	//TODO:not sure of this one
+	all node: Node | some node': Node | node->node' in edges
+
 }
 
 
-run {} for 1 Graph, 3 Colour,  5 Node
+run {} for 1 Graph, exactly 3 Colour,  exactly 4 Node

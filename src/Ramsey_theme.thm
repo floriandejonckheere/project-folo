@@ -26,6 +26,10 @@
    <type name="Node"/>
 </node>
 
+<edge visible="no">
+   <relation name="$node&apos;"> <type name="Node"/> <type name="Node"/> </relation>
+</edge>
+
 </view>
 
 </alloy>
