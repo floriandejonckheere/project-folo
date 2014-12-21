@@ -8,7 +8,7 @@
 
 /**
  * Om dit probleem wat interessanter en modelleerbaarder
- *  te maken, stellen we dat de te calculeren Ramseygetallen
+ * te maken, stellen we dat de te calculeren Ramseygetallen
  * gewoon het antwoord zijn van het 'party problem':
  * 
  * R(m,n) = Hoeveel gasten moeten er uitgenodigd worden
@@ -24,14 +24,78 @@
  *
  * */
 
-sig Node{ }
+sig Colour {}
+sig Node {}
 
-sig State{
-	nodes : Node,
-	edges: Node->Node
+sig Edge {
+	connection: Node -> Node,
+	colour: one Colour
 }{
-	//no self-referencing
-	all node: Node,state: State{
-		no state.edges.node = node
+	// No self-referencing
+	all node:Node | (node -> node not in connection)
+}
+
+// Make sure that 'colouring' is the same as Edge->colour
+fact {
+	colour = ~(Graph.colouring)
+}
+
+// Make sure symmetric relations have the same colour
+fact {
+	all e: Edge | some e': Edge | {
+		e.connection = ~(e'.connection) && e.colour = e'.colour
 	}
 }
+
+// Force a monochromely-coloured set with X nodes
+pred Colours [col: Colour, X: Int] {
+	#((~(Graph.colouring)).col) = X
+}
+
+one sig Graph{
+	nodes: set Node,
+
+	// Edges: Node -> Node
+	edges: set Edge,
+	colouring: Colour one -> some Edge
+}{
+	// All nodes in graph
+	all node: Node | node in nodes
+
+	// All edges in graph
+	all edge:Edge | edge in edges
+
+	// Edges relationship is symmetrical
+	all edge: Edge | some edge':Edge | edge.connection = ~(edge'.connection)
+
+	// Every edge only connects 2 points
+	all edge: Edge | one edge.connection
+
+	// Complete graph
+	all n, n' : Node | some e:Edge | n != n' => n -> n' in e.connection
+}
+
+/**
+ * Run the numbers
+ *
+ * #Edge should be #(N)*#(N-1)
+ * N = 3 => E = 6
+ * N = 4 => E = 12
+ * N = 5 => E = 20
+ * N = 6 => E = 30
+ *
+ * */
+assert TwoColours {
+	some c, c': Colour | c != c' and {
+		/**
+		 * Colour conditions:
+		 * Each line indicates a (disjoint) subset of edges of the same colour.
+		 * Please note that you should double the number of cliques
+		 * as input variable, because each edge consists of two 'Edge'
+		 * objects (due to undirected symmetry of graph).
+		 * */
+		Colours[c, 6] or Colours[c', 2]
+	}
+}
+
+check TwoColours for exactly 3 Colour, exactly 3 Node, 6 Edge
