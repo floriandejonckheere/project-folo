@@ -43,7 +43,7 @@ fact {
 // Make sure symmetric relations have the same colour
 fact {
 	all e: Edge | some e': Edge | {
-		e.connection = ~(e'.connection) => e.colour = e'.colour
+		e.connection = ~(e'.connection) && e.colour = e'.colour
 	}
 }
 
@@ -88,7 +88,9 @@ one sig Graph{
 run {
 	// Make sure two sets of disjointly coloured edges exist
 	some c, c': Colour | c != c' and {
-		Colours[c, 3]
-		Colours[c', 3]
+		//input values should always be even. If this was not the case, then connections of 
+		//different colours  between the same nodes would be possible
+		Colours[c, 4]
+		Colours[c', 2]
 	}
 } for exactly 2 Colour, exactly 3 Node, exactly 6 Edge
