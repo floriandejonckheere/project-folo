@@ -40,8 +40,15 @@ fact {
 	colour = ~(Graph.colouring)
 }
 
+// Make sure symmetric relations have the same colour
+fact {
+	all e: Edge | some e': Edge | {
+		e.connection = ~(e'.connection) => e.colour = e'.colour
+	}
+}
+
 // Force a monochromely-coloured set with X nodes
-pred ColourConstraint [X: Int] {
+pred Colours [X: Int] {
 	some col:Colour | #((~(Graph.colouring)).col) = X
 }
 
@@ -70,6 +77,6 @@ one sig Graph{
 }
 
 run {
-	ColourConstraint[4]
-	ColourConstraint[2]
+	Colours[3]
+	Colours[3]
 } for exactly 2 Colour, exactly 3 Node, exactly 6 Edge
