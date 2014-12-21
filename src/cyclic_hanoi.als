@@ -1,18 +1,17 @@
 module examples/puzzles/hanoi
 
-/*
+/**
  * Cyclic towers of Hanoi model
  *
- * author of hanoi model: Ilya Shlyakhter
- * modified by Jasper D'haene <jasper.dhaene@gmail.com>
- */
+ * Author of hanoi model: Ilya Shlyakhter
+ * Modified by Jasper D'haene <jasper.dhaene@gmail.com>
+ * */
 
 open util/ordering[State] as states
 open util/ordering[Stake] as stakes
 open util/ordering[Disc] as discs
 
 sig Stake { }
-
 sig Disc { }
 
 /**
@@ -21,11 +20,11 @@ sig Disc { }
  * sequence of states.
  */
 sig State {
-  on: Disc -> one Stake  // _each_ disc is on _exactly one_ stake
-  // note that we simply record the set of discs on each stake --
-  // the implicit assumption is that on each stake the discs
-  // on that stake are ordered by size with smallest disc on top
-  // and largest on bottom, as the problem requires.
+	on: Disc -> one Stake  // _each_ disc is on _exactly one_ stake
+	// note that we simply record the set of discs on each stake --
+	// the implicit assumption is that on each stake the discs
+	// on that stake are ordered by size with smallest disc on top
+	// and largest on bottom, as the problem requires.
 }
 
 /**
@@ -53,24 +52,24 @@ fun topDisc[st: State, stake: Stake]: lone Disc {
  * to tell the Alloy Analyzer that the function is in fact deterministic.)
  */
 pred Move [st: State, fromStake, toStake: Stake, s': State] {
-   //modified: Cyclic move property
-   fromStake !=stakes/last =>
-      fromStake.next = toStake
-   else
-      toStake = stakes/first
+	//modified: Cyclic move property
+	fromStake != stakes/last =>
+		fromStake.next = toStake
+	else
+		toStake = stakes/first
 
-   let d = st.topDisc[fromStake] | {
-      // all discs on toStake must be larger than d,
-      // so that we can put d on top of them
-      st.discsOnStake[toStake] in discs/nexts[d]
-      // after, the fromStake has the discs it had before, minus d
-      s'.discsOnStake[fromStake] = st.discsOnStake[fromStake] - d
-      // after, the toStake has the discs it had before, plus d
-      s'.discsOnStake[toStake] = st.discsOnStake[toStake] + d
-      // the remaining stake afterwards has exactly the discs it had before
-      let otherStake = Stake - fromStake - toStake |
-        s'.discsOnStake[otherStake] = st.discsOnStake[otherStake]
-   }
+	let d = st.topDisc[fromStake] | {
+		// all discs on toStake must be larger than d,
+		// so that we can put d on top of them
+		st.discsOnStake[toStake] in discs/nexts[d]
+		// after, the fromStake has the discs it had before, minus d
+		s'.discsOnStake[fromStake] = st.discsOnStake[fromStake] - d
+		// after, the toStake has the discs it had before, plus d
+		s'.discsOnStake[toStake] = st.discsOnStake[toStake] + d
+		// the remaining stake afterwards has exactly the discs it had before
+		let otherStake = Stake - fromStake - toStake |
+			s'.discsOnStake[otherStake] = st.discsOnStake[otherStake]
+	}
 }
 
 /**
@@ -78,50 +77,51 @@ pred Move [st: State, fromStake, toStake: Stake, s': State] {
  * and a rightStake that has all the discs at the end
  */ 
 pred Game1 {
-   Disc in states/first.discsOnStake[stakes/first]
-   //modified end condition
-   some finalState: State | Disc in finalState.discsOnStake[stakes/last] && (finalState = states/last)
+	Disc in states/first.discsOnStake[stakes/first]
+	//modified end condition
+	some finalState: State | Disc in finalState.discsOnStake[stakes/last] && (finalState = states/last)
 
-   // each adjacent pair of states are related by a valid move of one disc
-   all preState: State - states/last |
-       let postState = states/next[preState] |
-          some fromStake: Stake | {
-             // must have at least one disk on fromStake to be able to move
-             // a disc from fromStake to toStake
-             some preState.discsOnStake[fromStake]
-             // post- results from pre- by making one disc move
-             some toStake: Stake | preState.Move[fromStake, toStake, postState]
-          }
+	// each adjacent pair of states are related by a valid move of one disc
+	all preState: State - states/last |
+		let postState = states/next[preState] |
+			some fromStake: Stake | {
+				// must have at least one disk on fromStake to be able to move
+				// a disc from fromStake to toStake
+				some preState.discsOnStake[fromStake]
+				// post- results from pre- by making one disc move
+				some toStake: Stake | preState.Move[fromStake, toStake, postState]
+			}
 }
 
 /**
- * there is a leftStake that has all the discs at the beginning,
+ * There is a leftStake that has all the discs at the beginning,
  * and a rightStake that has all the discs at the end
  */
-pred Game2  {
-   Disc in states/first.discsOnStake[stakes/first]
-   some finalState: State | Disc in finalState.discsOnStake[stakes/last]
+pred Game2 {
+	Disc in states/first.discsOnStake[stakes/first]
+	some finalState: State | Disc in finalState.discsOnStake[stakes/last]
 
-   // each adjacent pair of states are related by a valid move of one disc
-   all preState: State - states/last |
-       let postState = states/next[preState] |
-          some fromStake: Stake |
-             let d = preState.topDisc[fromStake] | {
-               // must have at least one disk on fromStake to be able to move
-               // a disc from fromStake to toStake
-               some preState.discsOnStake[fromStake]
-               postState.discsOnStake[fromStake] = preState.discsOnStake[fromStake] - d
-               some toStake: Stake | {
-                 // post- results from pre- by making one disc move
-                 preState.discsOnStake[toStake] in discs/nexts[d]
-                 postState.discsOnStake[toStake] = preState.discsOnStake[toStake] + d
-                // the remaining stake afterwards has exactly the discs it had before
-                let otherStake = Stake - fromStake - toStake |
-                    postState.discsOnStake[otherStake] = preState.discsOnStake[otherStake]
-                }
-             }
-      }
+	// Each adjacent pair of states are related by a valid move of one disc
+	all preState: State - states/last |
+		let postState = states/next[preState] |
+			some fromStake: Stake | {
+				let d = preState.topDisc[fromStake] | {
+					// Must have at least one disk on fromStake to be able to move
+					// a disc from fromStake to toStake
+					some preState.discsOnStake[fromStake]
+					postState.discsOnStake[fromStake] = preState.discsOnStake[fromStake] - d
+					some toStake: Stake | {
+						// post- results from pre- by making one disc move
+						preState.discsOnStake[toStake] in discs/nexts[d]
+						postState.discsOnStake[toStake] = preState.discsOnStake[toStake] + d
+						// the remaining stake afterwards has exactly the discs it had before
+						let otherStake = Stake - fromStake - toStake |
+							postState.discsOnStake[otherStake] = preState.discsOnStake[otherStake]
+					}
+				}
+			}
+		}
 
-//#state == 22 + 3X voor geldige instantie. 
+// #state == 22 + 3X voor geldige instantie. 
 run Game1 for 1 but 3 Stake, 3 Disc, 22 State expect 1
 run Game2 for 1 but 3 Stake, 3 Disc, 8 State expect 1
