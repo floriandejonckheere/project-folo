@@ -9,12 +9,15 @@
 \usepackage{wallpaper}
 \usepackage{listings}
 \usepackage{amsmath}
-\usepackage{amsthm}
 \usepackage{amssymb}
+\usepackage{./alloy}
 
 \usepackage{xcolor, colortbl}
 \definecolor{ugentblue}{HTML}{164A7C}
 \definecolor{gray}{HTML}{AAAAAA}
+\definecolor{lightgray}{HTML}{FAFAFA}
+\definecolor{grayborder}{HTML}{CCCCCC}
+\definecolor{commentgreen}{HTML}{009900}
 
 % Tables
 \def\arraystretch{1.35}
@@ -34,9 +37,24 @@
 \pagestyle{fancy}
 \fancyhf{}
 
-\newtheorem{theorem}{Theorem}
-
 \interfootnotelinepenalty=0
+
+\lstset{
+	backgroundcolor=\color{lightgray},
+	basicstyle=\footnotesize,
+	commentstyle=\color{commentgreen},
+	frame=single,
+	keywordstyle=\color{blue},
+	language=Alloy,
+	numbers=left,
+	numbersep=5pt,
+	numberstyle=\tiny\color{gray},
+	rulecolor=\color{black},
+	stepnumber=1,
+	stringstyle=\color{ugentblue},
+	showspaces=false,
+	showstringspaces=false
+}
 
 \begin{document}
 	\begin{titlepage}
@@ -77,6 +95,9 @@
 
 		\noindent Informeel is dit probleem (voor $k = 2$) ook wel bekend als het \textit{party problem}: hoe groot is de minimale set van personen die uitgenodigd moeten worden voor een feestje, waarvoor geldt dat ofwel minstens $m$ personen elkaar (mutueel) kennen, ofwel $n$ personen elkaar (mutueel) niet kennen.
 
+		\clearpage{}
+		\lstinputlisting[caption=Ramseygetallen Alloy model]{../src/ramsey_numbers.als}
+
 	\clearpage{}
 	\section{Cyclische toren van Hanoi}
 		De cyclische toren van Hanoi is een variant op de bekende combinatorische puzzel. Buiten de drie hoofdregels geldt de volgende regels ook:
@@ -86,5 +107,7 @@
 		\end{enumerate}
 
 		\noindent Als basis voor het algoritme werd de ge\"implementeerde versie van Ilya Shlyakhter beschouwd. Deze versie wordt bijgeleverd als voorbeeld bij de Alloy Analyzer, maar implementeert de niet-cyclische variant.
+
+		\lstinputlisting[caption=Cyclische toren van Hanoi Alloy model]{../src/cyclic_hanoi.als}
 
 \end{document}
