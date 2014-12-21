@@ -40,11 +40,9 @@ fact {
 	colour = ~(Graph.colouring)
 }
 
-// Specify the colour conditions
-fact {
-	// There are X edges in the same colour and Y in a different. X+Y=#Edge. X and Y are even.
-	some col:Colour | #((~(Graph.colouring)).col) = 4
-	some col:Colour | #((~(Graph.colouring)).col) = 2
+// Force a monochromely-coloured set with X nodes
+pred ColourConstraint [X: Int] {
+	some col:Colour | #((~(Graph.colouring)).col) = X
 }
 
 
@@ -71,4 +69,7 @@ one sig Graph{
 	all n, n' : Node | some e:Edge | n != n' => n -> n' in e.connection
 }
 
-run {} for 1 Graph, exactly 2 Colour, exactly 3 Node, exactly 6 Edge
+run {
+	ColourConstraint[4]
+	ColourConstraint[2]
+} for exactly 2 Colour, exactly 3 Node, exactly 6 Edge
