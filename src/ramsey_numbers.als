@@ -85,8 +85,7 @@ one sig Graph{
  * N = 6 => E = 30
  *
  * */
-run {
-	// Make sure two sets of disjointly coloured edges exist
+assert TwoColours {
 	some c, c': Colour | c != c' and {
 		/**
 		 * Colour conditions:
@@ -97,4 +96,6 @@ run {
 		 * */
 		Colours[c, 6] or Colours[c', 2]
 	}
-} for exactly 3 Colour, exactly 3 Node, 6 Edge
+}
+
+check TwoColours for exactly 3 Colour, exactly 3 Node, 6 Edge
