@@ -8,7 +8,7 @@
 
 /**
  * Om dit probleem wat interessanter en modelleerbaarder
- *  te maken, stellen we dat de te calculeren Ramseygetallen
+ * te maken, stellen we dat de te calculeren Ramseygetallen
  * gewoon het antwoord zijn van het 'party problem':
  * 
  * R(m,n) = Hoeveel gasten moeten er uitgenodigd worden
@@ -24,52 +24,51 @@
  *
  * */
 
-sig Colour{}
+sig Colour {}
+sig Node {}
 
-sig Node{}
-
-sig Edge{
-	connection: Node ->Node,
-	colour:  one Colour
+sig Edge {
+	connection: Node -> Node,
+	colour: one Colour
 }{
-	//no self-referencing
-	all node:Node | (node->node not in connection)
-
+	// No self-referencing
+	all node:Node | (node -> node not in connection)
 }
 
-//make sure that 'colouring' is the same as Edge->colour
+// Make sure that 'colouring' is the same as Edge->colour
 fact {
 	colour = ~(Graph.colouring)
 }
 
-//specify the colour conditions
+// Specify the colour conditions
 fact {
-	//there are X edges in the same colour and Y in a different. X+Y=#Edge. X and Y are even.
+	// There are X edges in the same colour and Y in a different. X+Y=#Edge. X and Y are even.
 	some col:Colour | #((~(Graph.colouring)).col) = 4
 	some col:Colour | #((~(Graph.colouring)).col) = 2
 }
 
 
 one sig Graph{
-	nodes : set Node,
-//	edges: Node -> Node
-    edges: set Edge,
+	nodes: set Node,
+
+	// Edges: Node -> Node
+	edges: set Edge,
 	colouring: Colour one -> some Edge
 }{
-	//all nodes in graph
+	// All nodes in graph
 	all node: Node | node in nodes
-	//all edges in graph
+
+	// All edges in graph
 	all edge:Edge | edge in edges
 
-   //edges relationship is symmetrical
+	// Edges relationship is symmetrical
 	all edge: Edge | some edge':Edge | edge.connection = ~(edge'.connection)
-	
-	//every edge only connects 2 points
+
+	// Every edge only connects 2 points
 	all edge: Edge | one edge.connection
 
-   //complete graph
-   all node, node' : Node | some edge:Edge | node != node' => node->node' in edge.connection
-
+	// Complete graph
+	all n, n' : Node | some e:Edge | n != n' => n -> n' in e.connection
 }
 
-run {} for 1 Graph, exactly 2 Colour,  exactly 3 Node,  exactly 6 Edge
+run {} for 1 Graph, exactly 2 Colour, exactly 3 Node, exactly 6 Edge
