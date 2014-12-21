@@ -101,7 +101,7 @@
 			R(m, n; k) = v
 		\end{equation} \\
 
-		Dan kunnen de programmaparameters als volgt geschreven worden:\\
+		\noindent Dan kunnen de programmaparameters als volgt geschreven worden:\\
 
 		\begin{lstlisting}
 ...
@@ -110,6 +110,17 @@ run {
 	Sub_Graph[m] or Sub_Graph[n]
 } for k Colour, exactly v Node, exactly (v * (v - 1)) Edge
 		\end{lstlisting}
+
+		Wanneer het algoritme wordt uitgevoerd voor $R(3, 3) \equiv R(3, 3; 2)$ kan men door middel van iteratie het Ramseygetal bepalen. Dit wordt uiteindelijk vastgesteld als
+		\begin{equation}
+			R(3, 3) = 6
+		\end{equation}\\
+
+		\noindent Ditzelfde proces herhalen we voor $R(3, 3, 3)$.
+
+		\begin{equation}
+			R(3, 3, 3) = 17
+		\end{equation}
 
 		\clearpage{}
 		\lstinputlisting[caption=Ramseygetallen Alloy model]{../src/ramsey_numbers.als}
