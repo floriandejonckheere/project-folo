@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view>
+
+<projection> <type name="State"/> </projection>
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Int"/>
+   <type name="Stake"/>
+   <type name="State"/>
+   <type name="String"/>
+   <type name="univ"/>
+   <type name="discs/Ord"/>
+   <type name="seq/Int"/>
+   <type name="stakes/Ord"/>
+   <type name="states/Ord"/>
+   <set name="$Game1_finalState" type="State"/>
+   <set name="First" type="states/Ord"/>
+   <set name="Next" type="states/Ord"/>
+</node>
+
+<node color="Green">
+   <set name="$Game1_fromStake" type="Stake"/>
+   <set name="$Game1_toStake" type="Stake"/>
+</node>
+
+<node shape="Ellipse">
+   <type name="Disc"/>
+</node>
+
+</view>
+
+</alloy>
