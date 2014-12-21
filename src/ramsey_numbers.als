@@ -71,11 +71,10 @@ one sig Graph{
 }
 
 pred Sub_Graph [ X:  Int] {
-	some col: Colour | 
-	some edges_set:  set col.(Graph.colouring) | 
-	#edges_set = X
-	&& No_Symmetry[edges_set] //geen A->B en B->A in edges_set.
-	&& Mutual_Friends[edges_set] //alle edges zijn op een willekeurige manier verbonden met elkaar
+	some col: Colour | some edges_set:  set col.(Graph.colouring) | 
+		#edges_set = X
+		&& No_Symmetry[edges_set] // Geen A->B en B->A in edges_set.
+		&& Mutual_Friends[edges_set] // Alle edges zijn op een willekeurige manier verbonden met elkaar
 }
 
 pred No_Symmetry[edges_set:set Edge]{
@@ -83,7 +82,11 @@ pred No_Symmetry[edges_set:set Edge]{
 }
 
 fun Nodes_In_Set[edges:set Edge]: set Node{
-	{n: Node | some n':Node | n ->n' in edges.connection || n'->n in edges.connection}
+	{
+		n: Node | some n':Node | {
+			n ->n' in edges.connection || n'->n in edges.connection
+		}
+	}
 }
 
 pred Mutual_Friends[edges_set:set Edge]{
@@ -93,11 +96,11 @@ pred Mutual_Friends[edges_set:set Edge]{
 
 /**
  * #Edge should be #Node*(#Node-1)
-*/
+ */
 
-//R(r,s) = R(5,2) = 5
+// R(r,s) = R(5,2) = 5
 run {
-	//input X= r*(r-1)/2. Choose either r or s
+	// Input X = (r * (r-1))/2. Choose either r or s
 	Sub_Graph[10]
 }
 for 2 Colour, exactly 5 Node, exactly 20 Edge
