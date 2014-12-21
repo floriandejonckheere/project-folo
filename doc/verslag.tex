@@ -77,8 +77,8 @@
 			{\huge \textsf{Project Alloy}}
 			\vskip\baselineskip
 			\noindent
-			\textsf{\textbf{Jasper D'haene}}
-			\textsf{\textbf{Florian Dejonckheere}}
+			\textsf{\textbf{Jasper D'haene \textless jasper.dhaene@ugent.be\textgreater} \\
+				\textbf{Florian Dejonckheere \textless florian@floriandejonckheere.be\textgreater}}
 		\end{minipage}
 	\end{titlepage}
 
@@ -94,6 +94,22 @@
 		Ramsey's theorem dicteert dat in een voldoende grote set waarvan de bogen gekleurd zijn met een willekeurig aantal kleuren, monochromatisch gekleurde subsets te vinden zijn. Stel $m, n \in \mathbb{R^+}$ en twee kleuren $k_i, i \in [0, 1]$, dan definieert Ramsey's theorem $R(m, n, k)$ de ondergrens voor de complete graaf die een subset over tenminste $m$ toppen met kleur $k_0$, of een subset over tenminste $n$ toppen met kleur $k_1$ bevat.\\
 
 		\noindent Informeel is dit probleem (voor $k = 2$) ook wel bekend als het \textit{party problem}: hoe groot is de minimale set van personen die uitgenodigd moeten worden voor een feestje, waarvoor geldt dat ofwel minstens $m$ personen elkaar (mutueel) kennen, ofwel $n$ personen elkaar (mutueel) niet kennen.
+
+		\noindent Het Ramseygetal wordt bepaald door het uitvoeren van \'e\'en of meerdere instanties van het predikaat \textit{Sub\_Graph}. Dit predikaat controleer of er disjuncte subsets te vinden zijn van verschillende kleuren. Als er bij dit predikaat een instantie wordt gevonden, is het Ramseygetal gevonden.
+		De parameters van het algoritme zijn in te stellen op de laatste regels. Stel het volgende Ramseygetal:
+		\begin{equation}
+			R(m, n; k) = v
+		\end{equation} \\
+
+		Dan kunnen de programmaparameters als volgt geschreven worden:\\
+
+		\begin{lstlisting}
+...
+
+run {
+	Sub_Graph[m] or Sub_Graph[n]
+} for k Colour, exactly v Node, exactly (v * (v - 1)) Edge
+		\end{lstlisting}
 
 		\clearpage{}
 		\lstinputlisting[caption=Ramseygetallen Alloy model]{../src/ramsey_numbers.als}
