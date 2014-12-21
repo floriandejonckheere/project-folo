@@ -10,18 +10,14 @@
 <defaultedge/>
 
 <node>
+   <type name="Graph"/>
    <type name="Int"/>
    <type name="String"/>
    <type name="univ"/>
    <type name="seq/Int"/>
-   <set name="$col" type="Colour"/>
-   <set name="$col&apos;" type="Colour"/>
-   <set name="edges" type="Edge"/>
+   <set name="$Sub_Graph_col" type="Colour"/>
+   <set name="$Sub_Graph_edges_set" type="Edge"/>
    <set name="nodes" type="Node"/>
-</node>
-
-<node shape="Box" color="Blue">
-   <type name="Graph"/>
 </node>
 
 <node shape="Box" color="Red">
@@ -36,15 +32,20 @@
    <type name="Edge"/>
 </node>
 
+<node showlabel="no">
+   <set name="edges" type="Edge"/>
+</node>
+
 <edge color="Gray">
    <relation name="colour"> <type name="Edge"/> <type name="Colour"/> </relation>
 </edge>
 
-<edge color="Green" constraint="no">
+<edge color="Green" visible="no" attribute="yes" constraint="no">
    <relation name="connection"> <type name="Edge"/> <type name="Node"/> <type name="Node"/> </relation>
 </edge>
 
 <edge visible="no">
+   <relation name="$e&apos;"> <type name="Edge"/> <type name="Edge"/> </relation>
    <relation name="$edge&apos;"> <type name="Edge"/> <type name="Edge"/> </relation>
    <relation name="colouring"> <type name="Colour"/> <type name="Edge"/> </relation>
 </edge>

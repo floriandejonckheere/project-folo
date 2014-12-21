@@ -47,11 +47,6 @@ fact {
 	}
 }
 
-// Force a monochromely-coloured set with X nodes
-pred Colours [col: Colour, X: Int] {
-	#((~(Graph.colouring)).col) = X
-}
-
 one sig Graph{
 	nodes: set Node,
 
@@ -85,12 +80,30 @@ one sig Graph{
  * N = 6 => E = 30
  *
  * */
+
+pred Sub_Graph [ X: one Int] {
+	some col: Colour | 
+	some edges_set: set col.(Graph.colouring)  | 
+	#edges_set = X 
+	&& No_Symmetry[edges_set] //geen A->B en B->A in edges_set.
+	&& Mutual_Friends[edges_set] //alle edges zijn op een willekeurige manier verbonden met elkaar
+}
+
+pred No_Symmetry[edges_set:set Edge]{
+	all edge: edges_set | all edge':(edges_set-edge) | edge.connection != ~(edge'.connection)
+}
+
+pred Mutual_Friends[edges_set:set Edge]{
+	all edge: edges_set | all friend_edge: (edges_set-edge) |
+
+	//There are four different situations where 2 edges fit together
+	some edge.connection.(friend_edge.connection) || 
+	some edge.connection.(~(friend_edge.connection)) ||
+	some (~(edge.connection)).(friend_edge.connection) || 
+	some (~(edge.connection)).(~(friend_edge.connection))
+}
+
 run {
-	// Make sure two sets of disjointly coloured edges exist
-	some c, c': Colour | c != c' and {
-		//input values should always be even. If this was not the case, then connections of 
-		//different colours  between the same nodes would be possible
-		Colours[c, 4]
-		Colours[c', 2]
-	}
-} for exactly 2 Colour, exactly 3 Node, exactly 6 Edge
+	Sub_Graph[3] 	
+}
+for 2 Colour, exactly 3 Node, exactly 6 Edge
