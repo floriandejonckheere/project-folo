@@ -40,13 +40,17 @@ fact {
 	colour = ~(Graph.colouring)
 }
 
-// Specify the colour conditions
+// Make sure symmetric relations have the same colour
 fact {
-	// There are X edges in the same colour and Y in a different. X+Y=#Edge. X and Y are even.
-	some col:Colour | #((~(Graph.colouring)).col) = 4
-	some col:Colour | #((~(Graph.colouring)).col) = 2
+	all e: Edge | some e': Edge | {
+		e.connection = ~(e'.connection) && e.colour = e'.colour
+	}
 }
 
+// Force a monochromely-coloured set with X nodes
+pred Colours [col: Colour, X: Int] {
+	#((~(Graph.colouring)).col) = X
+}
 
 one sig Graph{
 	nodes: set Node,
@@ -71,4 +75,27 @@ one sig Graph{
 	all n, n' : Node | some e:Edge | n != n' => n -> n' in e.connection
 }
 
-run {} for 1 Graph, exactly 2 Colour, exactly 3 Node, exactly 6 Edge
+/**
+ * Run the numbers
+ *
+ * #Edge should be #(N)*#(N-1)
+ * N = 3 => E = 6
+ * N = 4 => E = 12
+ * N = 5 => E = 20
+ * N = 6 => E = 30
+ *
+ * */
+assert TwoColours {
+	some c, c': Colour | c != c' and {
+		/**
+		 * Colour conditions:
+		 * Each line indicates a (disjoint) subset of edges of the same colour.
+		 * Please note that you should double the number of cliques
+		 * as input variable, because each edge consists of two 'Edge'
+		 * objects (due to undirected symmetry of graph).
+		 * */
+		Colours[c, 6] or Colours[c', 2]
+	}
+}
+
+check TwoColours for exactly 3 Colour, exactly 3 Node, 6 Edge
