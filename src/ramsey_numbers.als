@@ -70,21 +70,10 @@ one sig Graph{
 	all n, n' : Node | some e:Edge | n != n' => n -> n' in e.connection
 }
 
-/**
- * Run the numbers
- *
- * #Edge should be #(N)*#(N-1)
- * N = 3 => E = 6
- * N = 4 => E = 12
- * N = 5 => E = 20
- * N = 6 => E = 30
- *
- * */
-
-pred Sub_Graph [ X: one Int] {
+pred Sub_Graph [ X:  Int] {
 	some col: Colour | 
-	some edges_set: set col.(Graph.colouring)  | 
-	#edges_set = X 
+	some edges_set:  set col.(Graph.colouring) | 
+	#edges_set = X
 	&& No_Symmetry[edges_set] //geen A->B en B->A in edges_set.
 	&& Mutual_Friends[edges_set] //alle edges zijn op een willekeurige manier verbonden met elkaar
 }
@@ -93,17 +82,22 @@ pred No_Symmetry[edges_set:set Edge]{
 	all edge: edges_set | all edge':(edges_set-edge) | edge.connection != ~(edge'.connection)
 }
 
+fun Nodes_In_Set[edges:set Edge]: set Node{
+	{n: Node | some n':Node | n ->n' in edges.connection || n'->n in edges.connection}
+}
+
 pred Mutual_Friends[edges_set:set Edge]{
-	all edge: edges_set | all friend_edge: (edges_set-edge) |
-
-	//There are four different situations where 2 edges fit together
-	some edge.connection.(friend_edge.connection) || 
-	some edge.connection.(~(friend_edge.connection)) ||
-	some (~(edge.connection)).(friend_edge.connection) || 
-	some (~(edge.connection)).(~(friend_edge.connection))
+	all node: Nodes_In_Set[edges_set] |  all node': (Nodes_In_Set[edges_set] - node) |
+	node->node' in edges_set.connection || node'->node in edges_set.connection
 }
 
+/**
+ * #Edge should be #Node*(#Node-1)
+*/
+
+//R(r,s) = R(5,2) = 5
 run {
-	Sub_Graph[3] 	
+	//input X= r*(r-1)/2. Choose either r or s
+	Sub_Graph[10]
 }
-for 2 Colour, exactly 3 Node, exactly 6 Edge
+for 2 Colour, exactly 5 Node, exactly 20 Edge
