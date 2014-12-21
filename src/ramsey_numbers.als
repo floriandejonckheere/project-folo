@@ -78,14 +78,17 @@ one sig Graph{
 /**
  * Run the numbers
  *
- * #Edge should be 2^#(N) - #(N)
+ * #Edge should be #(N)*#(N-1)
  * N = 3 => E = 6
  * N = 4 => E = 12
  * N = 5 => E = 20
- * N = 6 => E = 58
+ * N = 6 => E = 30
  *
  * */
 run {
 	// Make sure two sets of disjointly coloured edges exist
-	some c, c': Colour | c != c' and Colours[c, 6] and Colours[c', 6]
-} for exactly 2 Colour, exactly 4 Node, exactly 12 Edge
+	some c, c': Colour | c != c' and {
+		Colours[c, 3]
+		Colours[c', 3]
+	}
+} for exactly 2 Colour, exactly 3 Node, exactly 6 Edge
