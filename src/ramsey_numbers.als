@@ -88,9 +88,13 @@ one sig Graph{
 run {
 	// Make sure two sets of disjointly coloured edges exist
 	some c, c': Colour | c != c' and {
-		//input values should always be even. If this was not the case, then connections of 
-		//different colours  between the same nodes would be possible
-		Colours[c, 4]
-		Colours[c', 2]
+		/**
+		 * Colour conditions:
+		 * Each line indicates a (disjoint) subset of edges of the same colour.
+		 * Please note that you should double the number of cliques
+		 * as input variable, because each edge consists of two 'Edge'
+		 * objects (due to undirected symmetry of graph).
+		 * */
+		Colours[c, 6] or Colours[c', 2]
 	}
-} for exactly 2 Colour, exactly 3 Node, exactly 6 Edge
+} for exactly 3 Colour, exactly 3 Node, 6 Edge
